@@ -1,0 +1,48 @@
+erDiagram
+    users {
+        int id PK
+        string username
+        string password_hash
+        string role
+        string status
+    }
+    
+    company_profiles {
+        int id PK
+        int user_id FK
+        string company_name
+        string hr_contact
+        string website
+    }
+    
+    student_profiles {
+        int id PK
+        int user_id FK
+        string name
+        string contact
+        string resume_path
+    }
+    
+    drives {
+        int id PK
+        int company_id FK
+        string job_title
+        string job_description
+        string eligibility_criteria
+        date application_deadline
+        string status
+    }
+    
+    applications {
+        int id PK
+        int student_id FK
+        int drive_id FK
+        datetime application_date
+        string status
+    }
+    
+    users ||--o| company_profiles : "has"
+    users ||--o| student_profiles : "has"
+    users ||--o{ drives : "creates (if company)"
+    users ||--o{ applications : "submits (if student)"
+    drives ||--o{ applications : "receives"

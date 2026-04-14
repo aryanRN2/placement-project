@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 mb-4 text-center">
+            <div class="card-body">
+                <img src="https://ui-avatars.com/api/?name={{ current_user.student_profile.name }}&background=random" class="rounded-circle mb-3" width="80" alt="Avatar">
+                <h5 class="card-title">{{ current_user.student_profile.name }}</h5>
+                <p class="text-muted mb-1">{{ current_user.username }}</p>
+                <a href="{{ url_for('student_profile') }}" class="btn btn-sm btn-outline-primary mt-2">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <h3 class="text-primary mb-4">Available Placement Drives</h3>
+        
+        <div class="row">
+            {% for drive in drives %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">{{ drive.job_title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-primary">{{ drive.company.company_profile.company_name }}</h6>
+                        <p class="card-text small text-muted text-truncate">{{ drive.job_description }}</p>
+                        <hr>
+                        <p class="mb-1 small"><strong>Eligibility:</strong> {{ drive.eligibility_criteria }}</p>
+                        <p class="mb-2 small"><strong>Deadline:</strong> {{ drive.application_deadline }}</p>
+                        
+                        {% if drive.id in applied_drive_ids %}
+                            <button class="btn btn-success w-100" disabled>Applied</button>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('apply_drive', drive_id=drive.id) }}">
+                                <button type="submit" class="btn btn-primary w-100">Apply Now</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-info border-0 shadow-sm">
+                    No approved placement drives are currently available. Check back later!
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

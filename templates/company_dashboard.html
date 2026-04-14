@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-primary">Company Profile</h5>
+                <p><strong>Name:</strong> {{ current_user.company_profile.company_name }}</p>
+                <p><strong>Username:</strong> {{ current_user.username }}</p>
+
+
+                
+                <p><strong>Status:</strong> <span class="badge bg-success">{{ current_user.status|capitalize }}</span></p>
+            </div>
+        </div>
+        <div class="d-grid mb-4">
+            <a href="{{ url_for('create_drive') }}" class="btn btn-primary">Create New Drive</a>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white text-primary fw-bold">Upcoming / Active Drives</div>
+            <ul class="list-group list-group-flush">
+                {% for drive in upcoming_drives %}
+
+
+                
+                <li class="list-group-item">
+
+
+
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">{{ drive.id }}. {{ drive.job_title }}</h6>
+                            <small class="text-muted">Deadline: {{ drive.application_deadline }} | Status: {{ drive.status }}</small>
+                            <br>
+                            <small class="text-secondary">Applicants: {{ drive.applications|length }}</small>
+                        </div>
+
+
+
+
+
+                        <div>
+                            <a href="{{ url_for('view_applications', drive_id=drive.id) }}" class="btn btn-sm btn-outline-primary">View Applications</a>
+                        </div>
+                    </div>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No active drives found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white text-secondary fw-bold">Closed Drives</div>
+            <ul class="list-group list-group-flush">
+                {% for drive in closed_drives %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1 text-muted">{{ drive.job_title }}</h6>
+                        <small class="text-muted">Closed on deadline or by admin.</small>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('view_applications', drive_id=drive.id) }}" class="btn btn-sm btn-outline-secondary">Review</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No closed drives yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

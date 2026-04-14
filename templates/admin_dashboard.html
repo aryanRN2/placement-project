@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-9">
+        <h2 class="text-primary">Admin Dashboard</h2>
+    </div>
+    <div class="col-md-3">
+        <form class="d-flex" action="{{ url_for('admin_dashboard') }}" method="GET">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search student/org" value="{{ search_query }}">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Students</h5>
+                <h2>{{ total_students }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Companies</h5>
+                <h2>{{ total_companies }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Drives</h5>
+                <h2>{{ total_drives }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Applications</h5>
+                <h2>{{ total_applications }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Left Column -->
+    <div class="col-md-6">
+        <!-- Company Approvals -->
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-header bg-white text-primary fw-bold">Company Registration Applications</div>
+            <ul class="list-group list-group-flush">
+                {% for company in pending_companies %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ company.company_profile.company_name }} ({{ company.username }})
+                    <div>
+                        <a href="{{ url_for('admin_user_status', user_id=company.id, action='approve') }}" class="btn btn-sm btn-success">Approve</a>
+                        <a href="{{ url_for('admin_user_status', user_id=company.id, action='reject') }}" class="btn btn-sm btn-danger">Reject</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No pending company applications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Drive Approvals -->
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-header bg-white text-primary fw-bold">Company Drive Applications</div>
+            <ul class="list-group list-group-flush">
+                {% for drive in pending_drives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ drive.job_title }}</strong> <br>
+                        <small class="text-muted">{{ drive.company.company_name }}</small>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('admin_drive_status', drive_id=drive.id, action='approve') }}" class="btn btn-sm btn-success">Approve</a>
+                        <a href="{{ url_for('admin_drive_status', drive_id=drive.id, action='reject') }}" class="btn btn-sm btn-danger">Reject</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No pending drive applications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Ongoing Drives -->
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-header bg-white text-primary fw-bold">Ongoing Drives</div>
+            <ul class="list-group list-group-flush">
+                {% for drive in approved_drives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ drive.id }}. {{ drive.job_title }} ({{ drive.company.company_name }})</span>
+                    <a href="{{ url_for('admin_drive_status', drive_id=drive.id, action='close') }}" class="btn btn-sm btn-outline-secondary">Mark as complete</a>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No ongoing drives.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Right Column -->
+    <div class="col-md-6">
+        <!-- Registered Companies -->
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-header bg-white text-primary fw-bold">Registered Companies</div>
+            <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+                {% for company in companies %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ company.company_profile.company_name }}
+                    {% if company.status == 'approved' %}
+                        <a href="{{ url_for('admin_user_status', user_id=company.id, action='blacklist') }}" class="btn btn-sm btn-outline-danger">Blacklist</a>
+                    {% else %}
+                        <span class="badge bg-danger">Blacklisted</span>
+                        <a href="{{ url_for('admin_user_status', user_id=company.id, action='approve') }}" class="btn btn-sm btn-outline-success">Un-blacklist</a>
+                    {% endif %}
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No registered companies found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Registered Students -->
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-header bg-white text-primary fw-bold">Registered Students</div>
+            <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+                {% for student in students %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ student.student_profile.name }} ({{ student.username }})
+                    {% if student.status == 'approved' %}
+                        <a href="{{ url_for('admin_user_status', user_id=student.id, action='blacklist') }}" class="btn btn-sm btn-outline-danger">Blacklist</a>
+                    {% else %}
+                        <span class="badge bg-danger">Blacklisted</span>
+                        <a href="{{ url_for('admin_user_status', user_id=student.id, action='approve') }}" class="btn btn-sm btn-outline-success">Un-blacklist</a>
+                    {% endif %}
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No registered students found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

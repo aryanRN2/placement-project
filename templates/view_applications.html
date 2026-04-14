@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Applications for {{ drive.job_title }} | Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-primary mb-3">Update Applications for Drive</h3>
+        <h5 class="text-secondary mb-4">Job Title: {{ drive.job_title }}</h5>
+        
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white"><strong>Received Applications</strong></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student ID/Username</th>
+                            <th>Name</th>
+                            <th>Applied On</th>
+                            <th>Resume</th>
+                            <th>Status Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td class="align-middle">{{ app.student.username }}</td>
+                            <td class="align-middle">{{ app.student.student_profile.name }}</td>
+                            <td class="align-middle">{{ app.application_date.strftime('%Y-%m-%d') }}</td>
+                            <td class="align-middle">
+                                {% if app.student.student_profile.resume_path %}
+                                    <a href="{{ url_for('static', filename=app.student.student_profile.resume_path.replace('static/', '')) }}" target="_blank" class="btn btn-sm btn-outline-info">View Resume</a>
+                                {% else %}
+                                    <span class="text-muted small">No Resume</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                <form method="POST" action="{{ url_for('update_application', app_id=app.id) }}" class="d-flex">
+                                    <select name="status" class="form-select form-select-sm me-2" style="width: auto;">
+                                        <option value="Applied" {% if app.status == 'Applied' %}selected{% endif %}>Applied</option>
+
+
+
+
+                                        <option value="Waiting" {% if app.status == 'Waiting' %}selected{% endif %}>Waiting</option>
+                                        <option value="Shortlisted" {% if app.status == 'Shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                        <option value="Selected" {% if app.status == 'Selected' %}selected{% endif %}>Selected</option>
+                                        
+                                        <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No applications received yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-white d-flex justify-content-end">
+                <a href="{{ url_for('company_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
