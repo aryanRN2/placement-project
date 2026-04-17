@@ -5,14 +5,25 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from models import db, User, CompanyProfile, StudentProfile, Drive, Application
+from dotenv import load_dotenv
 
-
-
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'placeholder_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'placeholder_secret_key')
+
+db_url = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+# Standardize old postgres:// schema URLs which some providers still emit
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
+# Use /tmp on Vercel to bypass read-only filesystem issues, but note files will be deleted shortly after
+app_upload_folder = os.environ.get('UPLOAD_FOLDER', 'static/uploads')
+if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV'):
+    app_upload_folder = '/tmp'
+app.config['UPLOAD_FOLDER'] = app_upload_folder
 
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -400,3 +411,7 @@ def student_profile():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+
+
+
