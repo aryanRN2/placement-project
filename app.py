@@ -11,7 +11,14 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'placeholder_secret_key')
 
-db_url = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+db_url = os.environ.get('DATABASE_URL')
+if not db_url:
+    # Use /tmp on Vercel for sqlite to bypass read-only filesystem issues
+    if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV'):
+        db_url = 'sqlite:////tmp/database.db'
+    else:
+        db_url = 'sqlite:///database.db'
+
 # Standardize old postgres:// schema URLs which some providers still emit
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
