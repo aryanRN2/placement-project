@@ -7,11 +7,14 @@ from werkzeug.utils import secure_filename
 from models import db, User, CompanyProfile, StudentProfile, Drive, Application
 from dotenv import load_dotenv
 
+
+
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'placeholder_secret_key')
 
 db_url = os.environ.get('DATABASE_URL')
+
 if not db_url:
     # Use /tmp on Vercel for sqlite to bypass read-only filesystem issues
     if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV'):
@@ -36,6 +39,7 @@ app.config['UPLOAD_FOLDER'] = app_upload_folder
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db.init_app(app)
+#  If an anonymous user tries to access a protected page, the LoginManager needs to know where to kick them to. This tells the manager: "Redirect them to the route function named login."
 
 login_manager = LoginManager()
 login_manager.init_app(app)
