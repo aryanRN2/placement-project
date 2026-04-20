@@ -22,7 +22,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Placement Portal</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -55,7 +55,12 @@
     </nav>
 
     <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
+         <!-- </-----sdhfad-> -->
+<!-- If you DON'T use it: get_flashed_messages() returns a simple list of strings.['Login successful!', 'Invalid password'] -->
+<!-- f you DO use it: get_flashed_messages(with_categories=true) returns a list of tuples (pairs).[('success', 'Login successful!'), ('danger', 'Invalid password')] -->
+
+
+       {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
