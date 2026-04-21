@@ -3,7 +3,29 @@
 {% block title %}Welcome | Placement Portal{% endblock %}
 
 {% block content %}
-<div class="text-center hero-section">
+<style>
+    /* Override base background just for the homepage */
+    body {
+        background-color: #ffffff !important;
+        margin: 0;
+        overflow-x: hidden;
+    }
+    
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto; /* Allow canvas to receive mouse events */
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<div class="text-center hero-section" style="position: relative; z-index: 1;">
     <h1 class="display-4 fw-bold">Welcome to the Institute Placement Portal</h1>
     <p class="lead mt-3">Connecting brilliant minds with outstanding opportunities.</p>
     <div class="mt-4">
@@ -12,4 +34,6 @@
         <a href="{{ url_for('register_company') }}" class="btn btn-outline-light btn-lg px-4">Company Register</a>
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}
