@@ -47,4 +47,6 @@ The application creates a default admin user on the first run.
 - **Admin Username:** `admin`
 - **Admin Password:** `admin`
 
-For Company and Student accounts, please use the registration pages on the portal. (Note: New Company accounts require Admin approval before they can log in).
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
