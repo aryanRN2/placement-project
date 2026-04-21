@@ -135,11 +135,12 @@
                     <form method="POST" action="{{ url_for('login') }}">
                         <div class="mb-3 fade-in-stagger stagger-2">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control rounded-3" id="username" name="username" required>
+                            <input type="text" class="form-control rounded-3" id="username" name="username" required style = "border-color: #4ea7ec;">
+                            
                         </div>
                         <div class="mb-4 fade-in-stagger stagger-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control rounded-3" id="password" name="password" required>
+                            <input type="password" class="form-control rounded-3" id="password" name="password" required style = "border-color: #4ea7ec;">
                         </div>
                         <div class="d-grid fade-in-stagger stagger-4 mt-2">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">Login</button>
