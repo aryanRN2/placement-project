@@ -14,12 +14,21 @@
             padding: 4rem 2rem;
             border-radius: 0.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .glass-navbar {
+            background: rgba(255, 255, 255, 0.4) !important;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(213, 217, 224, 0.3);
+            /* Make navbar sticky so it stays at the top when scrolling */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light glass-navbar shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Placement Portal</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,10 +48,10 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('student_profile') }}">Profile</a></li>
                         {% endif %}
                         <li class="nav-item">
-                            <span class="nav-link text-light">Welcome, {{ current_user.username }}</span>
+                            <span class="nav-link text-dark fw-bold">Welcome, {{ current_user.username }}</span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light btn-sm ms-2" href="{{ url_for('logout') }}">Logout</a>
+                            <a class="nav-link btn btn-outline-primary btn-sm ms-2" href="{{ url_for('logout') }}">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>

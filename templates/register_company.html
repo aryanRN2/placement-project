@@ -3,9 +3,63 @@
 {% block title %}Company Registration | Placement Portal{% endblock %}
 
 {% block content %}
+<style>
+    /* Override base background */
+    body {
+        background-color: #ffffff !important;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto;
+    }
+    
+    /* Glassmorphism Card */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        border-radius: 1.2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        color: #1a1a1a !important;
+        animation: floatCard 6s ease-in-out infinite;
+    }
+    
+    @keyframes floatCard {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .glass-card .text-primary { color: #1a1a1a !important; }
+    .glass-card p, .glass-card .form-label { color: #333; font-weight: 500; }
+    
+    .glass-card .btn-primary {
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card .btn-primary:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm border-0 mt-4">
+        <div class="card glass-card border-0 mt-4">
             <div class="card-body p-5">
                 <h3 class="text-center mb-4 text-primary">Company Registration</h3>
                 <form method="POST" action="{{ url_for('register_company') }}">
@@ -46,4 +100,5 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}

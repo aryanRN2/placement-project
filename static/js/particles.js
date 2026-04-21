@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, particleRadius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; // Changed to dark for white background
+            ctx.fillStyle = 'rgba(39, 168, 177, 1.0)'; // Set opacity (the last number) to 1.0 for solid color
             ctx.fill();
         }
 
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const forceDirectionX = dx / distance;
                 const forceDirectionY = dy / distance;
                 const force = (mouseRadius - distance) / mouseRadius;
-                
+
                 // Pushing away
                 this.vx -= forceDirectionX * force * repelForce;
                 this.vy -= forceDirectionY * force * repelForce;
