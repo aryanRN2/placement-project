@@ -39,11 +39,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     class Particle {
-        constructor(x, y) {
+        constructor(x, y, isShape = false) {
+            this.isShape = isShape;
             this.homeX = x;
             this.homeY = y;
-            this.x = x;
-            this.y = y;
+            
+            if (this.isShape) {
+                // Shape particles start randomly on screen, then form the shape and become still
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.driftSpeed = 0; 
+                this.driftRadius = 0;
+            } else {
+                // Background particles start at their grid points and drift widely
+                this.x = x;
+                this.y = y;
+                this.driftSpeed = 0.0002 + Math.random() * 0.0005; 
+                this.driftRadius = 50 + Math.random() * 150; 
+            }
+            
             this.vx = 0;
             this.vy = 0;
             // Randomly select a color from the palette for this particle
@@ -51,8 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Random drift settings for constant organic motion
             this.randomOffset = Math.random() * Math.PI * 2;
-            this.driftSpeed = 0.0005 + Math.random() * 0.001; // Slow, organic drift speed
-            this.driftRadius = 15 + Math.random() * 30; // How far they wander from home
         }
 
         draw() {
@@ -102,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initParticles() {
         particles = [];
         
-        if (window.PARTICLE_SHAPE === 'login') {
+        if (window.PARTICLE_SHAPE === 'login' || window.PARTICLE_SHAPE === 'register') {
             // Draw shape on hidden canvas to extract pixel data
             const tCanvas = document.createElement('canvas');
             tCanvas.width = width;
@@ -110,8 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const tCtx = tCanvas.getContext('2d');
 
             tCtx.save();
-            // Position on right side of screen
-            tCtx.translate(width * 0.70, height * 0.5);
+            if (window.PARTICLE_SHAPE === 'login') {
+                // Position on right side of screen
+                tCtx.translate(width * 0.70, height * 0.5);
+            } else {
+                // Position on left side of screen for register
+                tCtx.translate(width * 0.30, height * 0.5);
+            }
             // Scale up massively
             const scale = Math.min(width, height) / 30; 
             tCtx.scale(scale, scale);
@@ -123,18 +140,41 @@ document.addEventListener('DOMContentLoaded', () => {
             tCtx.lineCap = 'round';
             tCtx.lineJoin = 'round';
 
-            // Login/Enter Arrow SVG Paths
-            const p1 = new Path2D('M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4');
-            const p2 = new Path2D('M10 17L15 12L10 7');
-            const p3 = new Path2D('M15 12H3');
-            
-            tCtx.stroke(p1);
-            tCtx.stroke(p2);
-            tCtx.stroke(p3);
+            if (window.PARTICLE_SHAPE === 'login') {
+                // Circular Login/Enter Icon
+                const p1 = new Path2D('M 9 4 A 9 9 0 1 1 9 20');
+                const p2 = new Path2D('M 2 12 H 13');
+                const p3 = new Path2D('M 9 8 L 13 12 L 9 16');
+                
+                tCtx.stroke(p1);
+                tCtx.stroke(p2);
+                tCtx.stroke(p3);
+            } else if (window.PARTICLE_SHAPE === 'register') {
+                // Document with Pencil Icon
+                const p1 = new Path2D('M 5 3 C 4 3 3 4 3 5 V 21 C 3 22 4 23 5 23 H 11'); 
+                const p2 = new Path2D('M 5 3 H 17 C 18 3 19 4 19 5 V 10'); 
+                const p3 = new Path2D('M 7 7 H 15'); 
+                const p4 = new Path2D('M 7 11 H 15'); 
+                const p5 = new Path2D('M 7 15 H 12'); 
+                const p6 = new Path2D('M 7 19 H 10'); 
+                const p7 = new Path2D('M 12 22 L 14 17 L 20 11 L 23 14 L 17 20 Z'); 
+                const p8 = new Path2D('M 14 17 L 17 20'); 
+                const p9 = new Path2D('M 19 12 L 22 15'); 
+                
+                tCtx.stroke(p1);
+                tCtx.stroke(p2);
+                tCtx.stroke(p3);
+                tCtx.stroke(p4);
+                tCtx.stroke(p5);
+                tCtx.stroke(p6);
+                tCtx.stroke(p7);
+                tCtx.stroke(p8);
+                tCtx.stroke(p9);
+            }
             tCtx.restore();
 
             const imgData = tCtx.getImageData(0, 0, width, height).data;
-            const spacing = 14; // Density of particles in the shape
+            const spacing = 5; // Density of particles in the shape
             
             for (let y = 0; y < height; y += spacing) {
                 for (let x = 0; x < width; x += spacing) {
@@ -144,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Valid pixel spot, add small random jitter
                         const jx = x + (Math.random() - 0.5) * spacing;
                         const jy = y + (Math.random() - 0.5) * spacing;
-                        particles.push(new Particle(jx, jy));
+                        particles.push(new Particle(jx, jy, true));
                     }
                 }
             }
@@ -152,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add sparse background particles
             for (let y = 0; y < height; y += particleSpacing * 2.5) {
                 for (let x = 0; x < width; x += particleSpacing * 2.5) {
-                    particles.push(new Particle(x, y));
+                    particles.push(new Particle(x, y, false));
                 }
             }
 
@@ -160,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Default Grid
             for (let y = 0; y < height; y += particleSpacing) {
                 for (let x = 0; x < width; x += particleSpacing) {
-                    particles.push(new Particle(x, y));
+                    particles.push(new Particle(x, y, false));
                 }
             }
         }

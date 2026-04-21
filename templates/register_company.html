@@ -98,8 +98,8 @@
 <canvas id="particleCanvas"></canvas>
 
 <div class="login-wrapper">
-    <div class="row justify-content-center m-0">
-        <div class="col-md-7 col-lg-6 col-xl-5">
+    <div class="row justify-content-end align-items-center h-100 m-0 pe-md-5 me-md-5">
+        <div class="col-md-6 col-lg-5 col-xl-4 z-2" style="position: relative;">
             <div class="card glass-card border-0">
                 <div class="card-body p-5">
                     <h3 class="text-center mb-4 text-primary fade-in-stagger stagger-1">Company Registration</h3>
@@ -129,5 +129,6 @@
         </div>
     </div>
 </div>
+<script>window.PARTICLE_SHAPE = 'register';</script>
 <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}
