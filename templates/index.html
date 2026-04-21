@@ -4,25 +4,14 @@
 
 {% block content %}
 <style>
-    /* Override base background just for the homepage */
+    /* Import Inter font for that clean, modern look */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     body {
         background-color: #ffffff !important;
         margin: 0;
         overflow-x: hidden;
-    }
-
-    /* Make the blue box transparent to see particles behind it */
-    .hero-section {
-        background: rgba(255, 255, 255, 0.2) !important;
-        /* Light transparent glass */
-        backdrop-filter: blur(1px);
-        /* Low blur so dots are still visible */
-        -webkit-backdrop-filter: blur(3px);
-        border: 1px solid rgba(144, 146, 149, 0.3);
-        /* Subtle blue edge */
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-        color: #1a1a1a !important;
-        /* Dark text for readability */
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     #particleCanvas {
@@ -33,21 +22,108 @@
         height: 100vh;
         z-index: -1;
         pointer-events: auto;
-        /* Allow canvas to receive mouse events */
+    }
+
+    .landing-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .brand-logo {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 0.5rem;
+    }
+
+    .brand-logo span {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #3c4043;
+    }
+
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        max-width: 900px;
+        margin-bottom: 3rem;
+    }
+
+    .btn-custom-dark {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        border: none;
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-custom-dark:hover {
+        background-color: #000000;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-custom-light {
+        background-color: #f8f9fa;
+        color: #3c4043;
+        border: 1px solid #dadce0;
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-custom-light:hover {
+        background-color: #f1f3f4;
+        color: #1a1a1a;
+        border-color: #d2d2d2;
+        transform: translateY(-2px);
     }
 </style>
 
 <!-- Antigravity Canvas -->
 <canvas id="particleCanvas"></canvas>
 
-<div class="text-center hero-section" style="position: relative; z-index: 1;">
-    <h1 class="display-4 fw-bold">Welcome to the Institute Placement Portal</h1>
-    <p class="lead mt-3">Connecting brilliant minds with outstanding opportunities.</p>
-    <div class="mt-4">
-        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4 me-2">Login</a>
-        <a href="{{ url_for('register_student') }}" class="btn btn-outline-primary btn-lg px-4 me-2">Student
-            Register</a>
-        <a href="{{ url_for('register_company') }}" class="btn btn-outline-primary btn-lg px-4">Company Register</a>
+<div class="landing-container">
+    <!-- Faux Logo -->
+    <div class="brand-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 22H22L12 2Z" fill="url(#paint0_linear)"/>
+            <defs>
+                <linearGradient id="paint0_linear" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#4285F4"/>
+                    <stop offset="1" stop-color="#34A853"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <span>Institute Placement Portal</span>
+    </div>
+
+    <!-- Massive Headline -->
+    <h1 class="hero-title">Welcome to the Institute Placement Portal<br></h1>
+    
+    <!-- Action Buttons -->
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a href="{{ url_for('login') }}" class="btn btn-custom-dark">
+            <svg class="me-2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            Login to Portal
+        </a>
+        <a href="{{ url_for('register_student') }}" class="btn btn-custom-light">Register Student</a>
+        <a href="{{ url_for('register_company') }}" class="btn btn-custom-light">Register Company</a>
     </div>
 </div>
 
