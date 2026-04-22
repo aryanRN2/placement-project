@@ -60,8 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             this.vx = 0;
             this.vy = 0;
-            this.angleOffset = 0;
-            this.distFromCenter = 0;
             // Randomly select a color from the palette for this particle
             this.color = colors[Math.floor(Math.random() * colors.length)];
             
@@ -95,15 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calculate a drifting target home instead of a fixed home
             const time = Date.now();
-            let targetX = this.homeX + Math.cos(time * this.driftSpeed + this.randomOffset) * this.driftRadius;
-            let targetY = this.homeY + Math.sin(time * this.driftSpeed + this.randomOffset) * this.driftRadius;
-
-            if (this.isShape && window.PARTICLE_SHAPE === 'loading') {
-                const rotationSpeed = 0.0005; // Slower rotation
-                const angle = this.angleOffset + time * rotationSpeed;
-                targetX = window.shapeCenterX + Math.cos(angle) * this.distFromCenter;
-                targetY = window.shapeCenterY + Math.sin(angle) * this.distFromCenter;
-            }
+            const targetX = this.homeX + Math.cos(time * this.driftSpeed + this.randomOffset) * this.driftRadius;
+            const targetY = this.homeY + Math.sin(time * this.driftSpeed + this.randomOffset) * this.driftRadius;
 
             // Return to drifting target (spring/easing)
             this.vx += (targetX - this.x) * returnSpeed;
@@ -123,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initParticles() {
         particles = [];
         
-        if (window.PARTICLE_SHAPE === 'login' || window.PARTICLE_SHAPE === 'register' || window.PARTICLE_SHAPE === 'loading') {
+        if (window.PARTICLE_SHAPE === 'login' || window.PARTICLE_SHAPE === 'register') {
             // Draw shape on hidden canvas to extract pixel data
             const tCanvas = document.createElement('canvas');
             tCanvas.width = width;
@@ -134,18 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.PARTICLE_SHAPE === 'login') {
                 // Position on right side of screen
                 tCtx.translate(width * 0.70, height * 0.5);
-                window.shapeCenterX = width * 0.70;
-                window.shapeCenterY = height * 0.5;
-            } else if (window.PARTICLE_SHAPE === 'register') {
+            } else {
                 // Position on left side of screen for register
                 tCtx.translate(width * 0.30, height * 0.5);
-                window.shapeCenterX = width * 0.30;
-                window.shapeCenterY = height * 0.5;
-            } else if (window.PARTICLE_SHAPE === 'loading') {
-                // Position on right side of screen for loading
-                tCtx.translate(width * 0.70, height * 0.5);
-                window.shapeCenterX = width * 0.70;
-                window.shapeCenterY = height * 0.5;
             }
             // Scale up massively
             const scale = Math.min(width, height) / 30; 
@@ -188,20 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tCtx.stroke(p7);
                 tCtx.stroke(p8);
                 tCtx.stroke(p9);
-            } else if (window.PARTICLE_SHAPE === 'loading') {
-                // Draw 8-segment loading spinner
-                tCtx.lineWidth = 4;
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i / 8) * Math.PI * 2;
-                    tCtx.save();
-                    tCtx.translate(12, 12); // move center temporarily if needed
-                    tCtx.rotate(angle);
-                    tCtx.beginPath();
-                    tCtx.moveTo(0, 6);
-                    tCtx.lineTo(0, 14);
-                    tCtx.stroke();
-                    tCtx.restore();
-                }
             }
             tCtx.restore();
 
@@ -216,10 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Valid pixel spot, add small random jitter
                         const jx = x + (Math.random() - 0.5) * spacing;
                         const jy = y + (Math.random() - 0.5) * spacing;
-                        let p = new Particle(jx, jy, true);
-                        p.angleOffset = Math.atan2(jy - window.shapeCenterY, jx - window.shapeCenterX);
-                        p.distFromCenter = Math.hypot(jy - window.shapeCenterY, jx - window.shapeCenterX);
-                        particles.push(p);
+                        particles.push(new Particle(jx, jy, true));
                     }
                 }
             }

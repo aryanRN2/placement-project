@@ -93,6 +93,8 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             if user.status != 'approved':
+                if user.role == 'company' and user.status == 'pending':
+                    return redirect(url_for('company_waiting'))
                 flash(f"Account is {user.status}. You cannot login.", "danger")
                 return redirect(url_for('login'))
             login_user(user)
@@ -166,9 +168,15 @@ def register_company():
         db.session.commit()
         
         flash("Registration successful. Wait for Admin approval.", "info")
-        return redirect(url_for('login'))
+        return redirect(url_for('company_waiting'))
         
     return render_template('register_company.html')
+
+@app.route('/company_waiting')
+def company_waiting():
+    return render_template('company_waiting.html')
+
+
 
 @app.route('/logout')
 @login_required

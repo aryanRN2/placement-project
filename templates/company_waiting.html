@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Waiting for Approval | Placement Portal{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Override base background just for the login page */
+    body {
+        background-color: #ffffff !important;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto;
+    }
+
+    /* Remove the solid background so particles show */
+    .login-wrapper {
+        border-radius: 1rem;
+        padding: 4rem 1rem;
+        margin-top: 1rem;
+    }
+
+    /* Glassmorphism Card (Matches Index Page) */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        border-radius: 1.2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        color: #1a1a1a !important;
+        /* Floating Animation */
+        animation: floatCard 6s ease-in-out infinite;
+    }
+    
+    .glass-card .text-primary {
+        color: #1a1a1a !important; 
+    }
+    
+    .glass-card p {
+        color: #333;
+        font-weight: 500;
+        font-size: 1.2rem;
+    }
+
+    /* Keyframes for subtle floating animation */
+    @keyframes floatCard {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* Staggered form elements fade-in */
+    .fade-in-stagger {
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .glass-card .btn-primary {
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card .btn-primary:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+<div class="login-wrapper">
+    <div class="row justify-content-start align-items-center h-100 m-0 ps-md-5 ms-md-5">
+        <div class="col-md-6 col-lg-5 col-xl-4 z-2" style="position: relative;">
+            <div class="card glass-card border-0">
+                <div class="card-body p-5 text-center">
+                    <h3 class="mb-4 text-primary fade-in-stagger stagger-1">Registration Complete</h3>
+                    <p class="fade-in-stagger stagger-2">Please wait for Admin approval.</p>
+                    <div class="mt-4 fade-in-stagger stagger-2">
+                        <a href="{{ url_for('login') }}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold">Go to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>window.PARTICLE_SHAPE = 'loading';</script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+{% endblock %}
