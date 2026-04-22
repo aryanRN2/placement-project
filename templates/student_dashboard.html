@@ -3,9 +3,48 @@
 {% block title %}Student Dashboard | Placement Portal{% endblock %}
 
 {% block content %}
-<div class="row">
+
+<style>
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        border-radius: 1.2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        color: #1a1a1a !important;
+    }
+
+    .glass-card .card-header {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border-bottom: 1px solid rgba(13, 110, 253, 0.2);
+        border-top-left-radius: 1.2rem;
+        border-top-right-radius: 1.2rem;
+    }
+    
+    .glass-card .list-group-item {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(13, 110, 253, 0.1);
+        color: #1a1a1a;
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<div class="row z-2" style="position: relative;">
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 mb-4 text-center">
+        <div class="card shadow-sm border-0 mb-4 text-center glass-card">
             <div class="card-body">
                 <img src="https://ui-avatars.com/api/?name={{ current_user.student_profile.name }}&background=random" class="rounded-circle mb-3" width="80" alt="Avatar">
                 <h5 class="card-title">{{ current_user.student_profile.name }}</h5>
@@ -21,7 +60,7 @@
         <div class="row">
             {% for drive in drives %}
             <div class="col-md-6 mb-4">
-                <div class="card shadow-sm h-100 border-0">
+                <div class="card shadow-sm h-100 border-0 glass-card">
                     <div class="card-body">
                         <h5 class="card-title text-dark">{{ drive.job_title }}</h5>
                         <h6 class="card-subtitle mb-2 text-primary">{{ drive.company.company_profile.company_name }}</h6>
@@ -42,7 +81,7 @@
             </div>
             {% else %}
             <div class="col-12">
-                <div class="alert alert-info border-0 shadow-sm">
+                <div class="alert alert-info border-0 shadow-sm glass-card">
                     No approved placement drives are currently available. Check back later!
                 </div>
             </div>
@@ -50,4 +89,7 @@
         </div>
     </div>
 </div>
+
+<script>window.PARTICLE_SHAPE = 'default';</script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}

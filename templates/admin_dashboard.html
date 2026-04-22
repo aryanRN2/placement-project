@@ -3,7 +3,55 @@
 {% block title %}Admin Dashboard | Placement Portal{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+
+<style>
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        border-radius: 1.2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        color: #1a1a1a !important;
+    }
+
+    .glass-card .card-header {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border-bottom: 1px solid rgba(13, 110, 253, 0.2);
+        border-top-left-radius: 1.2rem;
+        border-top-right-radius: 1.2rem;
+    }
+    
+    .glass-card .list-group-item {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(13, 110, 253, 0.1);
+        color: #1a1a1a;
+    }
+    
+    .glass-stat-info { background: rgba(13, 202, 240, 0.3) !important; border: 1px solid rgba(13, 202, 240, 0.5); }
+    .glass-stat-success { background: rgba(25, 135, 84, 0.3) !important; border: 1px solid rgba(25, 135, 84, 0.5); }
+    .glass-stat-warning { background: rgba(255, 193, 7, 0.3) !important; border: 1px solid rgba(255, 193, 7, 0.5); }
+    .glass-stat-danger { background: rgba(220, 53, 69, 0.3) !important; border: 1px solid rgba(220, 53, 69, 0.5); }
+    
+    .glass-stat-card h2, .glass-stat-card h5 {
+        color: #1a1a1a !important;
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<div class="row mb-4 z-2" style="position: relative;">
     <div class="col-md-9">
         <h2 class="text-primary">Admin Dashboard</h2>
     </div>
@@ -16,9 +64,9 @@
 </div>
 
 
-<div class="row mb-4">
+<div class="row mb-4 z-2" style="position: relative;">
     <div class="col-md-3">
-        <div class="card bg-info text-white shadow-sm">
+        <div class="card glass-card glass-stat-card glass-stat-info shadow-sm">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Students</h5>
                 <h2>{{ total_students }}</h2>
@@ -26,7 +74,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card bg-success text-white shadow-sm">
+        <div class="card glass-card glass-stat-card glass-stat-success shadow-sm">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Companies</h5>
                 <h2>{{ total_companies }}</h2>
@@ -34,7 +82,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card bg-warning text-dark shadow-sm">
+        <div class="card glass-card glass-stat-card glass-stat-warning shadow-sm">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Drives</h5>
                 <h2>{{ total_drives }}</h2>
@@ -42,7 +90,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card bg-danger text-white shadow-sm">
+        <div class="card glass-card glass-stat-card glass-stat-danger shadow-sm">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Applications</h5>
                 <h2>{{ total_applications }}</h2>
@@ -51,12 +99,12 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row z-2" style="position: relative;">
     <!-- Left Column -->
     <div class="col-md-6">
         <!-- Company Approvals -->
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-white text-primary fw-bold">Company Registration Applications</div>
+        <div class="card mb-4 shadow-sm border-0 glass-card">
+            <div class="card-header text-primary fw-bold">Company Registration Applications</div>
             <ul class="list-group list-group-flush">
                 {% for company in pending_companies %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -73,8 +121,8 @@
         </div>
         
         <!-- Drive Approvals -->
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-white text-primary fw-bold">Company Drive Applications</div>
+        <div class="card mb-4 shadow-sm border-0 glass-card">
+            <div class="card-header text-primary fw-bold">Company Drive Applications</div>
             <ul class="list-group list-group-flush">
                 {% for drive in pending_drives %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -94,8 +142,8 @@
         </div>
         
         <!-- Ongoing Drives -->
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-white text-primary fw-bold">Ongoing Drives</div>
+        <div class="card mb-4 shadow-sm border-0 glass-card">
+            <div class="card-header text-primary fw-bold">Ongoing Drives</div>
             <ul class="list-group list-group-flush">
                 {% for drive in approved_drives %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -112,8 +160,8 @@
     <!-- Right Column -->
     <div class="col-md-6">
         <!-- Registered Companies -->
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-white text-primary fw-bold">Registered Companies</div>
+        <div class="card mb-4 shadow-sm border-0 glass-card">
+            <div class="card-header text-primary fw-bold">Registered Companies</div>
             <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
                 {% for company in companies %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -132,8 +180,8 @@
         </div>
         
         <!-- Registered Students -->
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-header bg-white text-primary fw-bold">Registered Students</div>
+        <div class="card mb-4 shadow-sm border-0 glass-card">
+            <div class="card-header text-primary fw-bold">Registered Students</div>
             <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
                 {% for student in students %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -152,4 +200,7 @@
         </div>
     </div>
 </div>
+
+<script>window.PARTICLE_SHAPE = 'default';</script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}

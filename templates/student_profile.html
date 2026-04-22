@@ -3,10 +3,43 @@
 {% block title %}Student Profile | Placement Portal{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
+
+<style>
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: auto;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.4) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        border-radius: 1.2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        color: #1a1a1a !important;
+    }
+
+    .glass-card .card-header {
+        background: rgba(255, 255, 255, 0.3) !important;
+        border-bottom: 1px solid rgba(13, 110, 253, 0.2);
+        border-top-left-radius: 1.2rem;
+        border-top-right-radius: 1.2rem;
+    }
+</style>
+
+<!-- Antigravity Canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<div class="row justify-content-center z-2" style="position: relative;">
     <div class="col-md-8">
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white text-primary"><h4 class="mb-0">Edit Profile</h4></div>
+        <div class="card shadow-sm border-0 mb-4 glass-card">
+            <div class="card-header text-primary"><h4 class="mb-0">Edit Profile</h4></div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('student_profile') }}" enctype="multipart/form-data">
                     <div class="mb-3">
@@ -47,4 +80,7 @@
         </div>
     </div>
 </div>
+
+<script>window.PARTICLE_SHAPE = 'default';</script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}
