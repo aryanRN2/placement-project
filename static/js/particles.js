@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Mouse Repulsion
+            // Mouse Interaction
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -126,9 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const forceDirectionY = dy / distance;
                 const force = (mouseRadius - distance) / mouseRadius;
 
-                // Pushing away
-                this.vx -= forceDirectionX * force * repelForce;
-                this.vy -= forceDirectionY * force * repelForce;
+                if (window.isMouseOverClickable) {
+                    // ATTRACTION: Swarm toward the mouse
+                    this.vx += forceDirectionX * force * repelForce * 1.5;
+                    this.vy += forceDirectionY * force * repelForce * 1.5;
+                } else {
+                    // REPULSION: Pushing away
+                    this.vx -= forceDirectionX * force * repelForce;
+                    this.vy -= forceDirectionY * force * repelForce;
+                }
             }
 
             // Calculate a drifting target home instead of a fixed home
@@ -322,14 +328,42 @@ document.addEventListener('DOMContentLoaded', () => {
         window.resizeTimer = setTimeout(resize, 200);
     });
 
+    window.isMouseOverClickable = false;
+
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
+        
+        // Detect if the mouse is currently over a clickable element
+        if (e.target && e.target.closest) {
+            window.isMouseOverClickable = !!e.target.closest('a, button, input, select, textarea, .btn, .source-backdoor, [role="button"]');
+        }
     });
 
     window.addEventListener('mouseout', () => {
         mouse.x = undefined;
         mouse.y = undefined;
+        window.isMouseOverClickable = false;
+    });
+
+    // Mobile touch support
+    window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+            
+            // elementFromPoint accurately detects if finger slides over a new element
+            const touchTarget = document.elementFromPoint(mouse.x, mouse.y);
+            if (touchTarget && touchTarget.closest) {
+                window.isMouseOverClickable = !!touchTarget.closest('a, button, input, select, textarea, .btn, .source-backdoor, [role="button"]');
+            }
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+        mouse.x = undefined;
+        mouse.y = undefined;
+        window.isMouseOverClickable = false;
     });
 
     // Initialize
