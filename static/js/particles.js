@@ -77,6 +77,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         update() {
+            if (window.easterEggPhase === 1) {
+                // Phase 1: Collect to center and swirl with increasing speed
+                if (this.swirlRadius === undefined) {
+                    this.swirlRadius = Math.hypot(this.y - window.swirlCenterY, this.x - window.swirlCenterX);
+                    this.swirlAngle = Math.atan2(this.y - window.swirlCenterY, this.x - window.swirlCenterX);
+                    // Form a disk by assigning each particle a random radius from center (up to ~150px)
+                    this.targetSwirlRadius = Math.random() * 150;
+                }
+                
+                // Accelerate swirl globally
+                window.swirlSpeed += 0.00005; 
+                this.swirlAngle += window.swirlSpeed;
+                
+                // Pull firmly to their spot in the disk
+                this.swirlRadius += (this.targetSwirlRadius - this.swirlRadius) * 0.05;
+
+                const targetX = window.swirlCenterX + Math.cos(this.swirlAngle) * this.swirlRadius;
+                const targetY = window.swirlCenterY + Math.sin(this.swirlAngle) * this.swirlRadius;
+
+                // Move towards target
+                this.vx += (targetX - this.x) * 0.2;
+                this.vy += (targetY - this.y) * 0.2;
+                
+                // Apply friction
+                this.vx *= 0.8;
+                this.vy *= 0.8;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.draw();
+                return;
+            } else if (window.easterEggPhase === 2) {
+                // Phase 2: Burst! Let easter_egg.js handle the visual burst, hide these
+                this.y = -10000; 
+                return;
+            }
+
             // Mouse Repulsion
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
@@ -123,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initParticles() {
         particles = [];
         
-        if (window.PARTICLE_SHAPE === 'login' || window.PARTICLE_SHAPE === 'register' || window.PARTICLE_SHAPE === 'loading') {
+        if (window.PARTICLE_SHAPE === 'login' || window.PARTICLE_SHAPE === 'register' || window.PARTICLE_SHAPE === 'loading' || window.PARTICLE_SHAPE === 'source') {
             // Draw shape on hidden canvas to extract pixel data
             const tCanvas = document.createElement('canvas');
             tCanvas.width = width;
@@ -145,6 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Position on right side of screen for loading
                 tCtx.translate(width * 0.70, height * 0.5);
                 window.shapeCenterX = width * 0.70;
+                window.shapeCenterY = height * 0.5;
+            } else if (window.PARTICLE_SHAPE === 'source') {
+                // Doesn't matter because we override it below
+                tCtx.translate(width * 0.50, height * 0.5);
+                window.shapeCenterX = width * 0.50;
                 window.shapeCenterY = height * 0.5;
             }
             // Scale up massively
@@ -202,11 +245,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     tCtx.stroke();
                     tCtx.restore();
                 }
+            } else if (window.PARTICLE_SHAPE === 'source') {
+                // Remove scale for drawing text to get proper layout
+                tCtx.restore();
+                tCtx.save();
+                
+                tCtx.translate(width * 0.5, height * 0.5);
+                window.shapeCenterX = width * 0.5;
+                window.shapeCenterY = height * 0.5;
+
+                tCtx.textAlign = 'center';
+                tCtx.textBaseline = 'middle';
+                tCtx.fillStyle = 'white';
+
+                // Draw symbol
+                tCtx.font = "bold 200px monospace";
+                tCtx.fillText("</>", 0, -80);
+
+                // Draw ARYAN
+                tCtx.font = "900 100px sans-serif";
+                tCtx.fillText("ARYAN", 0, 90);
+                
+                // Set scale variable back if we somehow rely on it later, though we don't for 'source'
             }
             tCtx.restore();
 
             const imgData = tCtx.getImageData(0, 0, width, height).data;
-            const spacing = 5; // Density of particles in the shape
+            const spacing = window.PARTICLE_SHAPE === 'source' ? 2.5 : 5; // Higher density of particles in the source shape
             
             for (let y = 0; y < height; y += spacing) {
                 for (let x = 0; x < width; x += spacing) {

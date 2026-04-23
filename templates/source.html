@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source Code</title>
+    <meta name="author" content="Aryan Maurya">
+    <meta name="description" content="A Campus Placement Management System built by Aryan Maurya.">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: auto;
+            /* Allow mouse interaction for particles */
+        }
+
+        .branding-footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            font-family: sans-serif;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            /* Let clicks pass through to canvas */
+        }
+
+        .branding-footer a {
+            color: #0d6efd;
+            text-decoration: none;
+            pointer-events: auto;
+            font-weight: bold;
+        }
+
+        .branding-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .landing-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            text-align: center;
+            pointer-events: none; /* Let clicks pass through to canvas */
+        }
+
+        .landing-container > * {
+            pointer-events: auto; /* Re-enable clicks for text and buttons */
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .brand-logo span {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #3c4043;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin: 0 0 1rem 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #5f6368;
+            margin-bottom: 3rem;
+            font-weight: 400;
+        }
+
+        .btn-custom-dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-custom-dark:hover {
+            background-color: #0d6efd;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-custom-light {
+            background-color: #ffffff;
+            color: #0077b5;
+            border: 2px solid #0077b5;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-custom-light:hover {
+            background-color: #0077b5;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 119, 181, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="branding-footer">
+        <small>Built by Aryan Maurya | <a href="https://github.com/aryanRN2" target="_blank">GitHub Profile</a></small>
+    </div>
+
+    <!-- The particle canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="landing-container">
+        <div class="brand-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 22H22L12 2Z" fill="url(#paint0_linear)"/>
+                <defs>
+                    <linearGradient id="paint0_linear" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#4285F4"/>
+                        <stop offset="1" stop-color="#34A853"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>Engineering Portfolio</span>
+        </div>
+        
+        <h1 class="hero-title">Aryan Maurya</h1>
+        <p class="hero-subtitle">Student at BHU & IIT Madras</p>
+        
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="https://github.com/aryanRN2" target="_blank" class="btn-custom-dark">
+                <svg style="margin-right: 10px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                Explore My GitHub
+            </a>
+            
+            <a href="https://www.linkedin.com/in/aryan-maurya-59089730b/?skipRedirect=true" target="_blank" class="btn-custom-light">
+                <svg style="margin-right: 10px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                Connect on LinkedIn
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Tell the particles.js script to use the 'source' shape
+        window.PARTICLE_SHAPE = 'source';
+    </script>
+    <!-- Include the particle script -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/easter_egg.js') }}"></script>
+</body>
+
+</html>

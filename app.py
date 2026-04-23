@@ -429,6 +429,10 @@ def student_profile():
         
     return render_template('student_profile.html')
 
+@app.route('/source')
+def source():
+    return render_template('source.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
 
