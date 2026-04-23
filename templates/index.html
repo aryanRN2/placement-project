@@ -22,6 +22,12 @@
         height: 100vh;
         z-index: -1;
         pointer-events: auto;
+        animation: fadeInParticles 3s ease-in-out forwards;
+    }
+
+    @keyframes fadeInParticles {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
     }
 
     .landing-container {
@@ -114,7 +120,7 @@
     </div>
 
     <!-- Massive Headline -->
-    <h1 class="hero-title">Welcome to the Institute Placement Portal<br></h1>
+    <h1 class="hero-title" id="typewriter-title" style="min-height: 1.1em;"></h1>
     
     <!-- Action Buttons -->
     <div class="d-flex flex-wrap justify-content-center gap-3">
@@ -127,5 +133,41 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleElement = document.getElementById('typewriter-title');
+        const textToType = "Welcome to the Institute Placement Portal";
+        let index = 0;
+        
+        // Add a blinking cursor effect via CSS dynamically
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #typewriter-title::after {
+                content: '|';
+                animation: blink 1s step-end infinite;
+            }
+            @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+            .hide-cursor::after { display: none; }
+        `;
+        document.head.appendChild(style);
+
+        function typeText() {
+            if (index < textToType.length) {
+                titleElement.innerHTML += textToType.charAt(index);
+                index++;
+                // Typewriter speed: slightly random for realism
+                const speed = Math.random() * 50 + 30; 
+                setTimeout(typeText, speed);
+            } else {
+                // Done typing
+                setTimeout(() => {
+                    titleElement.classList.add('hide-cursor');
+                }, 500);
+            }
+        }
+        
+        setTimeout(typeText, 400); // Initial delay before typing starts
+    });
+</script>
 <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 {% endblock %}
