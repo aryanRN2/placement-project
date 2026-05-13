@@ -51,22 +51,26 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 def create_admin():
-    admin = User.query.filter_by(username='admin').first()
+    username = os.environ.get('ADMIN_USERNAME', 'admin')
+    password = os.environ.get('ADMIN_PASSWORD', 'admin')
+    admin = User.query.filter_by(username=username).first()
     if not admin:
-        hashed_password = generate_password_hash('admin', method='pbkdf2:sha256')
-        new_admin = User(username='admin', password_hash=hashed_password, role='admin', status='approved')
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_admin = User(username=username, password_hash=hashed_password, role='admin', status='approved')
         db.session.add(new_admin)
         db.session.commit()
-        print("Admin user created (username 'admin', password 'admin')")
+        print(f"Admin user created (username '{username}')")
 
 def create_admin2():
-    admin = User.query.filter_by(username='admin2').first()
+    username = os.environ.get('ADMIN2_USERNAME', 'admin2')
+    password = os.environ.get('ADMIN2_PASSWORD', 'admin2')
+    admin = User.query.filter_by(username=username).first()
     if not admin:
-        hashed_password = generate_password_hash('admin2', method='pbkdf2:sha256')
-        new_admin = User(username='admin2', password_hash=hashed_password, role='admin', status='approved')
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_admin = User(username=username, password_hash=hashed_password, role='admin', status='approved')
         db.session.add(new_admin)
         db.session.commit()
-        print("Admin user created (username 'admin', password 'admin')")
+        print(f"Admin user created (username '{username}')")
 
 with app.app_context():
     db.create_all()
