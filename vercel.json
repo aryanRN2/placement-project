@@ -8,6 +8,11 @@
   ],
   "routes": [
     {
+      "src": "/source",
+      "status": 301,
+      "headers": { "Location": "https://me-aryan.vercel.app/" }
+    },
+    {
       "src": "/(.*)",
       "dest": "app.py"
     }
