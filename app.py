@@ -435,7 +435,7 @@ def student_profile():
 
 @app.route('/source')
 def source():
-    return render_template('source.html')
+    return redirect('https://me-aryan.vercel.app/')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

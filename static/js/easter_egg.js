@@ -124,10 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isExploding = false;
                 document.body.removeChild(canvas);
                 
-                // Jump to the source page if not already there!
-                if (window.location.pathname !== '/source') {
-                    window.location.href = '/source';
-                }
+                // Jump to the portfolio page!
+                window.location.href = 'https://me-aryan.vercel.app/';
             }
         }
 
